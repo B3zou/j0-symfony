@@ -113,7 +113,7 @@ db-reset: ## Recrée la base de dev et recharge les données de démo si elles e
 
 ## —— ✅ Tests ————————————————————————————————————————————————————————————————
 test: test-env test-db ## Lance les tests Hurl : make test · make test f=02 · make test ERRORS=long
-	$(HURL) $(HURL_FLAGS) $(if $(REPORT),--report-junit /reports/j0.xml) $(if $(f),--glob '$(f)*.hurl',.)
+	$(HURL) $(HURL_FLAGS) $(if $(REPORT),--report-junit /reports/j0.xml) --glob '$(or $(f),)*.hurl'
 
 report: ## Rapport JUnit dans reports/ (pour l'enseignant)
 	@mkdir -p reports && rm -f reports/*.xml
