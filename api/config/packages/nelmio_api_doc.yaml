@@ -1,9 +1,11 @@
+# Swagger UI : http://localhost:8000/api — la documentation est générée à partir de vos routes.
 nelmio_api_doc:
     documentation:
         info:
-            title: My App
-            description: This is an awesome app!
-            version: 1.0.0
-    areas: # to filter documented areas
-        path_patterns:
-            - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
+            title: GG League — API faite main (J0)
+            description: "Chaque route déclarée sous /api avec #[Route] apparaît ici automatiquement. Essayez-les avec « Try it out »."
+            version: 0.1.0
+    areas:
+        default:
+            # Toutes les routes sous /api/, sauf la documentation elle-même
+            path_patterns: ['^/api/(?!docs)']
