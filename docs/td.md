@@ -1,12 +1,6 @@
 # J0 · TD — Premiers pas dans un projet Symfony
 
-> Durée : environ 1h30, juste après le cours. Seul ou à deux, l'entraide est bienvenue.
 > Antisèches : [Symfony, les bases](cheatsheets/symfony-bases.md) · [HTTP et REST](cheatsheets/http-rest.md)
-
-Ce matin, vous ne construisez presque rien : vous apprenez à lire. Vous allez visiter un projet Symfony, écrire un
-tout petit contrôleur pour voir une route naître, puis décortiquer ligne à ligne le contrôleur d'exemple que vous
-imiterez cet après-midi. Si à midi vous savez expliquer ce que fait chaque ligne de `GameController.php`, le TP se
-passera bien.
 
 Trois réflexes à prendre dès maintenant, et à garder toute la journée :
 
@@ -22,11 +16,7 @@ Un mot sur un raccourci que nous prenons aujourd'hui : `make db-update` aligne l
 
 ---
 
-## Étape 0 — Visiter le projet (30 min)
-
-### Ce qu'on cherche à comprendre
-
-Où vit le code, par où entre une requête, comment on parle à Symfony, et où regarder quand quelque chose ne va pas.
+## Étape 0 — Découverte du projet
 
 ### 0.1 Vérifier que tout tourne
 
@@ -126,7 +116,7 @@ la « barre de debug » ne s'affiche que sur des pages HTML.
 
 ---
 
-## Étape 1 — Un premier contrôleur (30 min) → `01-ping.hurl`
+## Étape 1 — Un premier contrôleur → `01-ping.hurl`
 
 ### Ce qu'on cherche à comprendre
 
@@ -143,7 +133,7 @@ court ou avec un tiret donne `404`, un `POST` sur `/api/ping` donne `405`.
 make sf c="make:controller PingController --no-template"
 ```
 
-`--no-template` : pas de gabarit Twig, on fait une API. À la question sur les tests PHPUnit, tapez Entrée. Le maker
+`--no-template` : pas de fichier Twig, on fait une API. À la question sur les tests PHPUnit, tapez Entrée. Le maker
 crée `api/src/Controller/PingController.php` :
 
 ```php
@@ -227,7 +217,7 @@ existe, mais pas avec ce verbe. Le corps est une page HTML, ne lisez que le stat
 
 ---
 
-## Étape 2 — Lire `GameController` ligne à ligne (30 min)
+## Étape 2 — Lire `GameController` ligne à ligne
 
 ### Ce qu'on cherche à comprendre
 

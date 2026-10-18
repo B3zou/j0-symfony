@@ -1,7 +1,7 @@
 # J0 · TP — Le registre de la ligue, fait main
 
 > Durée : l'après-midi, 13h30 – 17h30. Seul, entraide autorisée.
-> Paliers : 🟢 indispensable et très guidé · 🔵 attendu, avec des indices · 🔴 pour aller plus loin.
+> Paliers : 🟢 indispensable · 🔵 attendu, avec des indices · 🔴 pour aller plus loin.
 > Antisèches : [Symfony, les bases](cheatsheets/symfony-bases.md) · [HTTP et REST](cheatsheets/http-rest.md)
 
 Ce matin vous avez lu une API. Cet après-midi vous en écrivez une : les **équipes** de la ligue, leurs **joueurs**, avec
@@ -31,8 +31,6 @@ commit plutôt que de bricoler.
 | 🔵 | 7. Un service : le simulateur de match | 40 min | `06-versus` |
 | 🔴 | 8. Bonus au choix | | |
 
-C'est plus que l'après-midi ne contient : c'est voulu. Les étapes 1 à 4 sont le cœur ; 6 et 7 sont là pour que
-personne ne s'ennuie, et vous pourrez les reprendre plus tard, le dépôt reste à vous.
 
 **Avant chaque étape, lisez le fichier de test.** Il dit exactement ce qu'on attend : les URL, les codes, la forme du
 JSON. Les énoncés ci-dessous expliquent le *pourquoi* et donnent les *outils* ; le *quoi* précis est dans le test.
@@ -152,7 +150,7 @@ Commitez : `git add -A && git commit -m "J0 : entité Team" && git push`.
 
 ---
 
-## Étape 2 — 🟢→🔵 `TeamController` (60 min) → `02-teams.hurl`
+## Étape 2 — 🟢→🔵 `TeamController` → `02-teams.hurl`
 
 Lisez `tests/02-teams.hurl`. Il attend `GET` et `POST` sur `/api/teams`, `GET`, `PATCH` et `DELETE` sur
 `/api/teams/{id}`, un filtre `?country=BE`, un tri par nom, et vérifie la validation (tag, pays, unicité, champs
@@ -248,7 +246,7 @@ Une équipe doit lister ses **joueurs** : c'est l'objet de l'étape 3. Tout le r
 
 ---
 
-## Étape 3 — 🔵 `Player` et la relation avec `Team` (75 min) → `03-players.hurl`
+## Étape 3 — 🔵 `Player` et la relation avec `Team` → `03-players.hurl`
 
 Un joueur a un **pseudo** unique, un pays, un **rôle** facultatif, un **classement** Elo entre 0 et 3000 (1000 par
 défaut), une **date de naissance** (une donnée personnelle, on y reviendra) et une **équipe** facultative : sans équipe,
@@ -419,7 +417,7 @@ curl -s -X POST $API/api/players -H 'Content-Type: application/json' -d '{"nickn
 
 ---
 
-## Étape 4 — 🔵 Pagination (30 min) → `04-pagination.hurl`
+## Étape 4 — 🔵 Pagination → `04-pagination.hurl`
 
 `GET /api/players` doit renvoyer **10** joueurs par page, triés par pseudo ; `?page=2` donne la suite ; le **total** est
 dans l'en-tête `X-Total-Count` ; `?page=0` ou `?page=abc` répondent `400`. Lisez `tests/04-pagination.hurl`.
@@ -444,7 +442,7 @@ reste un simple tableau. Demain, vous verrez l'autre choix (`totalItems` dans le
 
 ---
 
-## Étape 5 — 🔵 Données de démo (10 min)
+## Étape 5 — 🔵 Données de démo → `05-fixtures.hurl`
 
 Jusqu'ici vous avez créé vos données à la main. Pour la suite, il en faut davantage, et les mêmes pour tout le monde.
 Un fichier de **fixtures** est fourni :
@@ -464,7 +462,7 @@ Ces fixtures resserviront demain. Commitez-les.
 
 ---
 
-## Étape 6 — 🔵 Une requête sur mesure dans le repository (30 min) → `05-top-players.hurl`
+## Étape 6 — 🔵 Une requête sur mesure dans le repository → `05-top-players.hurl`
 
 `findBy()` ne sait faire que des égalités reliées par `AND`. Dès qu'on veut trier par un classement, limiter le nombre
 de résultats, ou chercher « contient », il faut écrire la requête soi-même. Et le bon endroit pour l'écrire, c'est le
@@ -523,7 +521,7 @@ simple est `Doctrine\ORM\Tools\Pagination\Paginator` : `$paginator = new Paginat
 
 ---
 
-## Étape 7 — 🔵 Un service : le simulateur de match (40 min) → `06-versus.hurl`
+## Étape 7 — 🔵 Un service : le simulateur de match → `06-versus.hurl`
 
 Jusqu'ici, toute la logique est dans les contrôleurs. Ça tient tant qu'elle se résume à « lire, valider, enregistrer ».
 Dès qu'il y a une vraie règle métier, on la sort dans une classe à part, un **service**, pour trois raisons : le
@@ -611,7 +609,7 @@ calcul qu'on déclenche. Notez votre avis, on y reviendra quand on parlera de RP
 
 Sans test automatique ; après chaque bonus, `make test` doit rester vert.
 
-- **Un joueur au hasard.** `POST /api/teams/{id}/players/random` crée un joueur dans l'équipe, avec un pseudo tiré
+- **Un joueur au hasard.** `POST /api/players/random` crée un joueur dans l'équipe, avec un pseudo tiré
   d'une liste, le pays de l'équipe, un rôle et un classement aléatoires, et répond `201` + `Location`. La génération
   va dans un service `App\Service\PlayerFactory` avec une méthode `random(Team $team): Player` ; le contrôleur ne fait
   que persister. Si le pseudo tiré existe déjà, le service en choisit un autre (il peut recevoir `PlayerRepository`).
@@ -630,7 +628,7 @@ Sans test automatique ; après chaque bonus, `make test` doit rester vert.
 
 ---
 
-## Fin de journée (15 min)
+## Fin de journée
 
 `make test` : vert jusqu'où vous êtes allé. À la fin de `docs/mon-tp.md`, écrivez **trois lignes** : ce qui vous a semblé
 **répétitif** aujourd'hui, d'un contrôleur à l'autre, d'une action à l'autre. Gardez-les : demain matin commence par là.

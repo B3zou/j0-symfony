@@ -102,7 +102,6 @@ curl -i -X POST $API/api/teams -H 'Content-Type: application/json' -d '{"name": 
 curl -i -X PATCH $API/api/teams/9 -H 'Content-Type: application/json' -d '{"country": "BE"}'
 curl -s "$API/api/players?country=FR&page=2" | jq '.[].nickname'
 ```
-> Windows : utilisez WSL ou Git Bash. Dans PowerShell, `curl` n'est pas curl (tapez `curl.exe`) et les guillemets sont piégeux : `-d @fichier.json`.
 
 ## Lire un test Hurl (les tests du cours)
 
