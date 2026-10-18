@@ -450,6 +450,7 @@ Jusqu'ici vous avez créé vos données à la main. Pour la suite, il en faut da
 Un fichier de **fixtures** est fourni :
 
 ```bash
+mkdir -p api/src/DataFixtures
 cp docs/ressources/AppFixtures.php api/src/DataFixtures/
 make db-reset
 ```

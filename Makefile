@@ -25,13 +25,13 @@ BOLD   := \033[1m
 RESET  := \033[0m
 
 .PHONY: help doctor install up down restart build ps logs sh \
-        sf composer cc db-update db-reset \
+        sf composer own cc db-update db-reset \
         test test-env test-db report
 
 ## —— 🚀 Démarrage ————————————————————————————————————————————————————————————
 help: ## Affiche cette aide
 	@printf "$(BOLD)GG League · J0$(RESET) — commandes disponibles\n"
-	@grep -E '(^[a-zA-Z0-9_-]+:.*?## .*$$)|(^## )' $(MAKEFILE_LIST) \
+	@grep -hE '(^[a-zA-Z0-9_-]+:.*?## .*$$)|(^## )' $(firstword $(MAKEFILE_LIST)) \
 		| sed -E 's/^## (.*)/\n\1/' \
 		| awk 'BEGIN {FS = ":.*?## "}; /^[a-zA-Z0-9_-]+:/ {printf "  $(GREEN)%-12s$(RESET) %s\n", $$1, $$2; next} {print}'
 	@printf "\nExemples : make install · make test · make test f=02 · make sf c=\"debug:router\"\n"
@@ -94,9 +94,16 @@ sh: ## Shell dans le conteneur de l'API
 ## —— 🐘 Symfony ——————————————————————————————————————————————————————————————
 sf: ## Console Symfony : make sf c="make:entity Team"
 	$(EXEC_API) php bin/console $(c)
+	@$(MAKE) -s own
 
 composer: ## Composer : make composer c="require symfony/uid"
 	$(EXEC_API) composer $(c)
+	@$(MAKE) -s own
+
+# Le conteneur écrit en root : sous Linux/WSL2, les fichiers qu'il crée (make:entity, recettes Composer)
+# seraient sinon impossibles à modifier depuis l'éditeur. Sans effet sous macOS et Windows.
+own:
+	@$(EXEC_API) chown -R $(shell id -u):$(shell id -g) src config templates tests composer.json composer.lock symfony.lock .env 2>/dev/null || true
 
 cc: ## Vide le cache Symfony
 	$(EXEC_API) php bin/console cache:clear
