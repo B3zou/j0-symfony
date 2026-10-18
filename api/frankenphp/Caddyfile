@@ -1,0 +1,13 @@
+# Serveur web de l'API (FrankenPHP = Caddy + PHP). HTTP simple sur le port 80 du conteneur,
+# publié sur http://localhost:8000 (voir compose.yaml).
+{
+	skip_install_trust
+	frankenphp
+}
+
+:80 {
+	root /app/public
+	encode zstd br gzip
+	# Sert les fichiers statiques de public/ et envoie tout le reste à public/index.php (Symfony)
+	php_server
+}

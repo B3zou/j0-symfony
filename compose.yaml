@@ -1,0 +1,78 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# GG League · J0 — environnement de la journée (Docker Compose v2)
+# Ne lancez pas ces commandes à la main : utilisez le Makefile (make help).
+#
+#   api       Symfony 7.4 (votre API, faite main)     http://localhost:8000
+#   database  PostgreSQL 17                           localhost:5433 (depuis votre poste)
+#   api-test  copie de l'API en environnement « test » (base app_test), pour make test
+#   hurl      l'outil qui exécute les tests, lancé à la demande
+# ─────────────────────────────────────────────────────────────────────────────
+name: gg-league-j0
+
+x-api: &api
+  build:
+    context: ./api
+  image: ${API_IMAGE:-gg-league-j0-api:dev}
+  depends_on:
+    database:
+      condition: service_healthy
+  volumes:
+    - ./api:/app
+    # var/ (cache, logs) hors du dossier partagé : bien plus rapide sous Mac et Windows
+    - api_var:/app/var
+  healthcheck:
+    test: ["CMD", "php", "-r", "exit(false === @file_get_contents('http://localhost:2019/metrics') ? 1 : 0);"]
+    interval: 5s
+    timeout: 5s
+    retries: 120
+    start_period: 30s
+
+services:
+  database:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "app", "-U", "app"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    volumes:
+      - database_data:/var/lib/postgresql/data
+    ports:
+      # Accès depuis votre poste (DBeaver, DataGrip...) : localhost:5433, utilisateur app / mot de passe app
+      - "${DB_PORT:-5433}:5432"
+
+  api:
+    <<: *api
+    environment:
+      APP_ENV: dev
+    ports:
+      - "${API_PORT:-8000}:80"
+    tty: true
+
+  api-test:
+    <<: *api
+    profiles: ["test"]
+    environment:
+      APP_ENV: test
+      INSTALL_DEPS: "0"
+    depends_on:
+      database:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+
+  hurl:
+    image: ghcr.io/orange-opensource/hurl:8.0.1
+    profiles: ["tools"]
+    working_dir: /tests
+    volumes:
+      - ./tests:/tests:ro
+      - ./reports:/reports
+
+volumes:
+  database_data:
+  api_var:

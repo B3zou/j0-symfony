@@ -1,0 +1,15 @@
+# Rapports de tests (make report)
+/reports/*
+!/reports/.gitkeep
+
+# Surcharges locales (ports, nom de projet Compose)
+/.env
+
+# Notes de l'enseignant
+/TEACHER.md
+
+# Éditeurs et systèmes
+.idea/
+.vscode/
+.DS_Store
+__pycache__/
