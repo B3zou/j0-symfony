@@ -40,7 +40,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * Sans eux, la route apparaît quand même, avec ce que Symfony sait d'elle (chemin, méthode, paramètres).
  */
 #[Route('/api/teams', name: 'api_team_', format: 'json')]
-#[OA\Tag(name: 'Teams', description: 'Exemple fourni : les jeux de la ligue')]
+#[OA\Tag(name: 'Teams', description: 'Things about... teams!')]
 final class TeamController extends AbstractController
 {
     private const READ = ['groups' => ['team:read']];     // ce que l'API renvoie

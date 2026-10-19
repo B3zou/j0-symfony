@@ -25,13 +25,13 @@ class Team
     #[ORM\Column(length: 50, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 50)]
-    #[Groups(['team:read', 'team:write'])]
+    #[Groups(['team:read', 'team:write', 'player:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 5, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Regex('/^[A-Z0-9]{2,5}$/', message: 'Le tag doit faire 2 à 5 caractères en majuscules ou chiffres.')]
-    #[Groups(['team:read', 'team:write'])]
+    #[Groups(['team:read', 'team:write', 'player:read'])]
     private ?string $tag = null;
 
     #[ORM\Column(length: 2)]
@@ -44,6 +44,8 @@ class Team
      * @var Collection<int, Player>
      */
     #[ORM\OneToMany(targetEntity: Player::class, mappedBy: 'team')]
+    #[ORM\OrderBy(['nickname' => 'ASC'])]
+    #[Groups(['team:read'])]
     private Collection $players;
 
     public function __construct()

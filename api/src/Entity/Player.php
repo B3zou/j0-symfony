@@ -3,32 +3,53 @@
 namespace App\Entity;
 
 use App\Repository\PlayerRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Nelmio\ApiDocBundle\TypeDescriber\IntegerDescriber;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
+#[UniqueEntity('nickname', message: 'Ce pseudo est déjà pris.')]
 #[ORM\Entity(repositoryClass: PlayerRepository::class)]
 class Player
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['player:read'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 30)]
+    #[ORM\Column(length: 30, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 2, max: 30)]
+    #[Groups(['player:read', 'player:write', 'team:read'])]
     private ?string $nickname = null;
 
     #[ORM\Column(length: 2)]
+    #[Assert\NotBlank]
+    #[Assert\Country]
+    #[Groups(['player:read', 'player:write'])]
     private ?string $country = null;
 
     #[ORM\Column(length: 30, nullable: true)]
+    #[Assert\Length(max: 30)]
+    #[Groups(['player:read', 'player:write', 'team:read'])]
     private ?string $role = null;
 
-    #[ORM\Column]
-    private ?int $rating = null;
+    #[ORM\Column(type: Types::INTEGER, options: ['default' => 1000])]
+    #[Assert\Range(min: 0, max: 3000)]
+    #[Groups(['player:read', 'player:write', 'team:read'])]
+    private ?int $rating = 1000;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\LessThan('-13 years', message: 'Un joueur doit avoir au moins 13 ans.')]
+    #[Groups(['player:write'])]
     private ?\DateTimeImmutable $birthDate = null;
 
     #[ORM\ManyToOne(inversedBy: 'players')]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[Groups(['player:read', 'player:write'])]
     private ?Team $team = null;
 
     public function getId(): ?int
