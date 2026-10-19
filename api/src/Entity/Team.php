@@ -19,25 +19,25 @@ class Team
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['team:read'])]
+    #[Groups(['team:read', 'team:list'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 50)]
-    #[Groups(['team:read', 'team:write', 'player:read'])]
+    #[Groups(['team:read', 'team:write', 'player:read', 'team:list'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 5, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Regex('/^[A-Z0-9]{2,5}$/', message: 'Le tag doit faire 2 à 5 caractères en majuscules ou chiffres.')]
-    #[Groups(['team:read', 'team:write', 'player:read'])]
+    #[Groups(['team:read', 'team:write', 'player:read', 'team:list'])]
     private ?string $tag = null;
 
     #[ORM\Column(length: 2)]
     #[Assert\NotBlank]
     #[Assert\Country]
-    #[Groups(['team:read', 'team:write'])]
+    #[Groups(['team:read', 'team:write', 'team:list'])]
     private ?string $country = null;
 
     /**

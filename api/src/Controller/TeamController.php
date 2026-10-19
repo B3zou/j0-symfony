@@ -46,12 +46,14 @@ final class TeamController extends AbstractController
     private const READ = ['groups' => ['team:read']];     // ce que l'API renvoie
     private const WRITE = ['groups' => ['team:write']];   // ce que le client a le droit d'envoyer
 
-    public function __construct(private readonly EntityManagerInterface $em) {}
+    public function __construct(private readonly EntityManagerInterface $em)
+    {
+    }
 
     /** GET /api/teams → 200 + tableau JSON. */
     #[Route('', name: 'list', requirements: ['country' => '[a-zA-Z]{2}'], methods: ['GET'])]
     public function list(
-        TeamRepository $teams,
+        TeamRepository               $teams,
         #[MapQueryParameter] ?string $country = null
     ): JsonResponse
     {
@@ -76,7 +78,12 @@ final class TeamController extends AbstractController
     #[OA\Response(response: 404, description: 'Aucun jeu avec cet identifiant')]
     public function show(Team $team): JsonResponse
     {
-        return $this->json($team);
+        $context = [
+            AbstractNormalizer::GROUPS => ['team:list'],
+        ];
+
+        // $this->json() transforme les objets en JSON (composant Serializer) : un champ par getter.
+        return $this->json($team, 200, [], $context);
     }
 
     /**
@@ -115,13 +122,13 @@ final class TeamController extends AbstractController
                 AbstractNormalizer::OBJECT_TO_POPULATE => $team,
             ]);
         } catch (SerializerException $e) {
-            throw new BadRequestHttpException('Corps de requête invalide : '.$e->getMessage(), $e);
+            throw new BadRequestHttpException('Corps de requête invalide : ' . $e->getMessage(), $e);
         }
 
         $violations = $validator->validate($team);
         if (\count($violations) > 0) {
             // Même format d'erreur que #[MapRequestPayload] : 422 + liste des violations
-            throw new UnprocessableEntityHttpException((string) $violations, new ValidationFailedException($team, $violations));
+            throw new UnprocessableEntityHttpException((string)$violations, new ValidationFailedException($team, $violations));
         }
 
         $this->em->flush(); // UPDATE (Doctrine sait déjà que l'objet a changé)
