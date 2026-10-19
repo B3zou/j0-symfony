@@ -68,7 +68,7 @@ final class GameController extends AbstractController
      * et charge le jeu en base (EntityValueResolver). S'il n'existe pas → 404, sans une ligne de code.
      * La « requirement » DIGITS refuse /api/games/abc (404 aussi : aucune route ne correspond).
      */
-    #[Route('/{id}', name: 'show', methods: ['GET'], requirements: ['id' => Requirement::DIGITS])]
+    #[Route('/{id}', name: 'show', requirements: ['id' => Requirement::DIGITS], methods: ['GET'])]
     #[OA\Response(response: 200, description: 'Le jeu demandé', content: new Model(type: Game::class))]
     #[OA\Response(response: 404, description: 'Aucun jeu avec cet identifiant')]
     public function show(Game $game): JsonResponse
@@ -104,7 +104,7 @@ final class GameController extends AbstractController
      * Ici on ne crée pas un objet : on COMPLÈTE l'objet existant avec les champs reçus
      * (option OBJECT_TO_POPULATE du Serializer), puis on le valide nous-mêmes.
      */
-    #[Route('/{id}', name: 'update', methods: ['PATCH'], requirements: ['id' => Requirement::DIGITS])]
+    #[Route('/{id}', name: 'update', requirements: ['id' => Requirement::DIGITS], methods: ['PATCH'])]
     public function update(Game $game, Request $request, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         try {
@@ -127,7 +127,7 @@ final class GameController extends AbstractController
     }
 
     /** DELETE /api/games/{id} → 204 No Content. */
-    #[Route('/{id}', name: 'delete', methods: ['DELETE'], requirements: ['id' => Requirement::DIGITS])]
+    #[Route('/{id}', name: 'delete', requirements: ['id' => Requirement::DIGITS], methods: ['DELETE'])]
     public function delete(Game $game): Response
     {
         $this->em->remove($game);
