@@ -4,14 +4,6 @@ Aujourd'hui, pas de framework d'API : vous écrivez vous-même une API REST avec
 entre une requête HTTP et une ligne en base de données. Tout ce que vous ferez à la main aujourd'hui, vous le verrez
 automatisé demain. C'est le but : savoir ce qu'on délègue.
 
-| Horaire | Quoi | Support |
-|---|---|---|
-| 9h00 | `make install` tourne pendant que le cours commence | [README](../README.md) |
-| 9h15 – 10h45 | Cours : HTTP et REST, puis Symfony (requête → réponse, Doctrine, validation, sérialisation) | diapositives |
-| 10h45 – 12h15 | **TD** : visiter le projet, un premier contrôleur, lire l'exemple fourni | [td.md](td.md) |
-| 13h30 – 17h00 | **TP** : équipes, joueurs, pagination, puis un repository sur mesure et un service | [tp.md](tp.md) |
-| 17h00 – 17h30 | Bilan : `make test`, trois lignes de recul, commit et push | fin du TP |
-
 ## Les paliers
 
 Les étapes du TP sont marquées 🟢, 🔵 ou 🔴. Avancez à votre rythme : l'objectif est de comprendre, pas de tout finir.
